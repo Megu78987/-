@@ -318,8 +318,9 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 // Botにログイン（トークンは.envから取得）
 client.login(process.env.DISCORD_TOKEN).then(() => {
     logger.info("Logged in!"); // ログイン成功時のログ
-}).catch((err) => {
-    logger.error("Error logging in:", err); // ログイン失敗時のエラー
+).catch((err) => {
+    console.error("CRITICAL LOGIN ERROR:", err); // より詳細なエラーを出す
+    logger.error("Error logging in:", err);
 });
 
 // 毎分実行
@@ -343,4 +344,5 @@ cron.schedule('* * * * *', () => {
             }
         }
     })
+
 });
