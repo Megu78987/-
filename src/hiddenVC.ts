@@ -315,38 +315,34 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     }
 });
 
-// Botにログイン（トークンは.envから取得）
+// Botにログイン
 client.login(process.env.DISCORD_TOKEN).then(() => {
-    logger.info("Logged in!"); // ログイン成功時のログ
+    console.log("★★★ BOT LOGIN SUCCESS ★★★");
 }).catch((err) => {
-    console.error("CRITICAL LOGIN ERROR:", err); // 詳細なエラーを表示
-    logger.error("Error logging in:", err);
+    console.error("★★★ BOT LOGIN ERROR ★★★", err);
 });
-}); //
-    
+
+// 232行目から続いていた処理をここで閉じます
+    });
+});
 
 // 毎分実行
-cron.schedule('* * * * *', () => {
+cron.schedule('* * * * ', () => {
     hiddenChannelManager.getChannelArray().map(async (channel) => {
         const voiceChannel = client.channels.cache.get(channel);
         if (voiceChannel && voiceChannel.type === ChannelType.GuildVoice) {
             const members = voiceChannel.members;
-            //チャンネルに誰もいないかつ作成されてから3分経過しているチャンネルか判定
             const createdAt = voiceChannel.createdAt;
             const now = new Date();
             const diff = Math.abs(now.getTime() - createdAt.getTime());
-            const diffMinutes = Math.floor(diff / (1000 * 60));
+            const diffMinutes = Math.floor(diff / (1000 60)); // 修正済み
             if (members.size === 0 && diffMinutes > 3) {
-                // チャンネルを削除
                 const owner = hiddenChannelManager.getChannelOwner(voiceChannel.guild.id, voiceChannel.id);
                 if (owner) {
-                    await hiddenChannelManager.deleteHiddenVoiceChannel(voiceChannel.guild.id, owner);
-                    logger.info(`Deleted empty channel ${voiceChannel.name} with ID ${voiceChannel.id}`);
+                    await voiceChannel.delete();
+                    hiddenChannelManager.removeChannel(voiceChannel.guild.id, voiceChannel.id);
                 }
             }
         }
-    })
-
+    });
 });
-
-
