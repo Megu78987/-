@@ -322,6 +322,8 @@ client.login(process.env.DISCORD_TOKEN).then(() => {
     console.error("CRITICAL LOGIN ERROR:", err); // 詳細なエラーを表示
     logger.error("Error logging in:", err);
 });
+}); //
+    
 
 // 毎分実行
 cron.schedule('* * * * *', () => {
@@ -346,4 +348,5 @@ cron.schedule('* * * * *', () => {
     })
 
 });
+
 
