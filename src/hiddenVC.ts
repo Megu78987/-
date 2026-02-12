@@ -322,7 +322,7 @@ client.login(process.env.DISCORD_TOKEN).then(() => {
     console.error("★★★ BOT LOGIN ERROR ★★★", err);
 });
 
-// 232行目から続いていた処理をここで閉じます
+// 232行目の handleUserSelectMenu を完全に閉じる
     });
 });
 
@@ -335,7 +335,7 @@ cron.schedule('* * * * ', () => {
             const createdAt = voiceChannel.createdAt;
             const now = new Date();
             const diff = Math.abs(now.getTime() - createdAt.getTime());
-            const diffMinutes = Math.floor(diff / (1000 60)); // 修正済み
+            const diffMinutes = Math.floor(diff / (1000 60));
             if (members.size === 0 && diffMinutes > 3) {
                 const owner = hiddenChannelManager.getChannelOwner(voiceChannel.guild.id, voiceChannel.id);
                 if (owner) {
